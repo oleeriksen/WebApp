@@ -20,8 +20,10 @@
 
   <ItemGroup>
     <None Remove="Util\" />
+    <None Remove="Pages\InputControls\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Util\" />
+    <Folder Include="Pages\InputControls\" />
   </ItemGroup>
 </Project>
