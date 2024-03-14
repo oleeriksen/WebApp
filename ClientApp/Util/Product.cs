@@ -15,9 +15,7 @@ namespace ClientApp.Util
 
         public string? Description { get; set; }
 
-        public DateTime PublishedDate { get; set; } = DateTime.Now;
-
-        
+        public DateTime PublishedDate { get; set; } = DateTime.Now;  
     }
 }
 
