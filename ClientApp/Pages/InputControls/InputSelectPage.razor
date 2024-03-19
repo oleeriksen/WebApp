@@ -4,7 +4,7 @@
 <InputSelect @bind-Value="selectedOption" @oninput="OnInput">
     @foreach (var anOption in options)
     {
-        <option value="@anOption">@anOption</option>
+        <option value="@anOption">Betal med @anOption</option>
     }
 </InputSelect>
 @code {
@@ -19,7 +19,7 @@
 
     void OnInput(ChangeEventArgs e)
     {
-        selectedOption = e.Value.ToString();
+        selectedOption = e.Value?.ToString() ?? "null";
         Console.WriteLine($"OnInput: content = {selectedOption}");
     }
 

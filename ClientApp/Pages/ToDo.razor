@@ -60,7 +60,6 @@
         {
             todos.Clear();
             await localStore.RemoveItemAsync(todoKey);
-            await localStore.ClearAsync();
         }
 
         private void DeleteToDo(ToDoItem todo)

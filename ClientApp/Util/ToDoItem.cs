@@ -8,8 +8,6 @@ namespace ClientApp.Util
         public bool IsDone { get; set; }
         public required string Title { get; set; }
 
-      
-
         public int CompareTo(ToDoItem? other)
         {
             return IsDone.CompareTo(other.IsDone);
