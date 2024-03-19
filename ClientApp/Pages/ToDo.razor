@@ -6,16 +6,27 @@
 
 <h1>Todo  (not done: @todos.Count(todo => !todo.IsDone))</h1>
 
-<ul>
-    @foreach (var todo in todos)
-    {
-        <li>
-            <InputCheckbox @bind-Value="todo.IsDone"/>
-            <InputText @bind-Value="todo.Title" />
-            <scan class="bi bi-x-circle-fill" style="color:red;" @onclick="() => DeleteToDo(todo)"></scan>
-        </li>
-    }
-</ul>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">IsDone?</th>
+            <th scope="col">What to do</th>
+            <th scope="col">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var todo in todos)
+        {
+            <tr>
+                <td><InputCheckbox @bind-Value="todo.IsDone" /></td>
+                <td><InputText @bind-Value="todo.Title" /></td>
+                <td>
+                    <scan class="bi bi-x-circle-fill" style="color:red;" @onclick="() => DeleteToDo(todo)"></scan>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 <div class="btn-group" role="group" style="margin:2px 0 10px 0;">
     <button class="btn btn-outline-primary" @onclick="UpdateLocalStorage">Save</button>
     <button class="btn btn-outline-primary" @onclick="ClearLocalStorage">Clear</button>
