@@ -15,7 +15,11 @@ namespace ClientApp.Util
 
         public string? Description { get; set; }
 
-        public DateTime PublishedDate { get; set; } = DateTime.Now;  
+        public DateTime PublishedDate { get; set; } = DateTime.Now;
+
+        public string Category { get; set; } = "Other";
+
+        public bool IsPublished { get; set; }
     }
 }
 

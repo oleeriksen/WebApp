@@ -21,17 +21,32 @@
         <label for="Description">Description</label>
         <InputTextArea id="Description" @bind-Value="aProduct.Description" class="form-control" />
     </div>
+    
+    <div class="col-md-6 mb-3">
+        <label for="IsPublished">Is published</label>
+        <InputCheckbox id="IsPublished" @bind-Value="aProduct.IsPublished" class="form-check-input" />
+    </div>
+   
+    <div class="col-md-6 mb-3">
+        <label for="Category">Category</label>
+        <InputSelect id="Category" @bind-Value="aProduct.Category" class="form-control">
+            @foreach (var anOption in categories)
+            {
+                <option value="@anOption">@anOption</option>
+            }
+        </InputSelect>
+    </div>
 
     <div class="col-12 mb-3">
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </EditForm>
 
-
-
 @code {
 
-    
+    private string[] categories = { "Computer", "Audio", "Video", "Other" };
+
+
     private Product aProduct = new Product();
 
     private EditContext? aEditContext;
@@ -43,10 +58,10 @@
 
     private void handleSubmit()
     {
-        
+
     }
 
-    
+
 }
 
 
