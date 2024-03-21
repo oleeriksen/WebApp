@@ -7,10 +7,11 @@ namespace ClientApp.Util
     {
         public bool IsDone { get; set; }
         public required string Title { get; set; }
+        public int Priority { get; set; } = 2;
 
         public int CompareTo(ToDoItem? other)
         {
-            return IsDone.CompareTo(other.IsDone);
+            return -Priority.CompareTo(other.Priority);
         }
     }
 }

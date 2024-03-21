@@ -34,14 +34,17 @@ else
             }
         </tbody>
     </table>
+    <button class="btn btn-primary" @onclick="LoadData">Hent</button>
 }
 
 @code {
-    private WeatherForecast[]? forecasts;
+    private WeatherForecast[] forecasts = new WeatherForecast[0];
 
-    protected override async Task OnInitializedAsync()
+    protected async Task LoadData()
     {
         var data = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+
+       
         var d = DateOnly.FromDateTime(DateTime.Now).AddDays(1);
         foreach (var w in data) {
             w.Date = d;

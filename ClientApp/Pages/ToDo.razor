@@ -11,6 +11,7 @@
         <tr>
             <th scope="col">IsDone?</th>
             <th scope="col">What to do</th>
+            <th scope="col">Priority</th>
             <th scope="col">Delete</th>
         </tr>
     </thead>
@@ -20,6 +21,13 @@
             <tr>
                 <td><InputCheckbox @bind-Value="todo.IsDone" /></td>
                 <td><InputText @bind-Value="todo.Title" /></td>
+                <td><InputSelect @bind-Value="todo.Priority" class="form-control">
+
+                    @for (int i=0; i < priorities.Length;i++) 
+                        {
+                           <option value="@(i+1)">@priorities[i]</option>
+    }
+</InputSelect></td>
                 <td>
                     <scan class="bi bi-x-circle-fill" style="color:red;" @onclick="() => DeleteToDo(todo)"></scan>
                 </td>
@@ -40,6 +48,8 @@
 
 
     @code {
+
+        private string[] priorities = { "Lav", "Middel", "Høj" };
         private string? newTodoTitle;
 
         private List<ToDoItem> todos = new();
@@ -80,7 +90,8 @@
 
         private void SorterToDos()
         {
-            todos.Sort();
+            todos.Sort(new ToDoPriorityComparator());
+           
         }
 
 
