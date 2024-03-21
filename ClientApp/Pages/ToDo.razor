@@ -90,10 +90,7 @@
 
         private void SorterToDos()
         {
-            todos.Sort(new ToDoPriorityComparator());
-           
+            todos.Sort((a, b) => -a.Priority.CompareTo(b.Priority));
         }
-
-
     }
 
