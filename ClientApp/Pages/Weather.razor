@@ -42,7 +42,7 @@ else
 
     protected async Task LoadData()
     {
-        var data = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+        var data = await Http.GetFromJsonAsync<WeatherForecast[]>("https://localhost:7060/vejr/20");
 
        
         var d = DateOnly.FromDateTime(DateTime.Now).AddDays(1);
