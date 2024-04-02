@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Core.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServerAPI.Controllers;
@@ -12,7 +12,6 @@ public class WeatherForecastController : ControllerBase
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
-    //[EnableCors("policy")]
     [HttpGet]
     [Route("{n}")]
     public IEnumerable<WeatherForecast> Get(int n)

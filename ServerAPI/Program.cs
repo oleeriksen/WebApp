@@ -1,4 +1,6 @@
-﻿namespace ServerAPI;
+﻿using ServerAPI.Repositories;
+
+namespace ServerAPI;
 
 public class Program
 {
@@ -10,12 +12,16 @@ public class Program
 
         builder.Services.AddControllers();
 
+        builder.Services.AddSingleton<IShoppingRepository, ShoppingRepositoryInMemory>();
+
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("policy",
                               policy =>
                               {
                                   policy.AllowAnyOrigin();
+                              
+                                  policy.AllowAnyHeader();
                               });
         });
 
@@ -25,10 +31,11 @@ public class Program
 
         app.UseHttpsRedirection();
 
-        //app.UseCors("policy");
+        
 
         app.UseAuthorization();
 
+        app.UseCors("policy");
 
         app.MapControllers();
 
