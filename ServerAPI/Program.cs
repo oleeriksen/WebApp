@@ -20,7 +20,7 @@ public class Program
                               policy =>
                               {
                                   policy.AllowAnyOrigin();
-                              
+                                  policy.AllowAnyMethod();
                                   policy.AllowAnyHeader();
                               });
         });

@@ -1,4 +1,4 @@
-﻿@page "/shopping"
+﻿@page "/shopping2"
 @using Core.Model;
 @inject HttpClient Http;
 @inject Blazored.LocalStorage.ILocalStorageService localStore
@@ -12,6 +12,7 @@
             <th>Amount</th>
             <th>Price</th>
             <th>Done</th>
+            <th>Delete</th>
         </tr>
     </thead>
     <tbody>
@@ -24,15 +25,22 @@
                 <td>
                     <InputCheckbox id="Done" @bind-Value="item.Done" @onclick="() =>UpdateShoppingItem(item) " class="form-check-input" />
                 </td>
-                
+                <td>
+                    <svg xmlns="http://www.w3.org/2000/svg" @onclick="() => DeleteShoppingItem(item)" width="24" height="24" viewBox="0 0 8 8"><path fill="#900" d="M4 0C1.79 0 0 1.79 0 4s1.79 4 4 4s4-1.79 4-4s-1.79-4-4-4zM2.5 1.78L4 3.28l1.5-1.5l.72.72L4.72 4l1.5 1.5l-.72.72L4 4.72l-1.5 1.5l-.72-.72L3.28 4l-1.5-1.5l.72-.72z" /></svg>
+                </td>
             </tr>
         }
-        
+
     </tbody>
 </table>
+<button class="btn btn-primary" @onclick="() => addDialog.Open()">Add Item</button>
+
 
 <img src="busy.gif" style="display:@busyDisplayStyle" />
-<h2>Tilføj til indkøbslisten...</h2>
+
+
+<ModalDialog @ref="@addDialog" Title="Add Item to shoppinglist">
+
 
     <EditForm EditContext="@aEditContext" class="row p-3" OnValidSubmit="@HandleValidSubmit">
         <DataAnnotationsValidator />
@@ -49,7 +57,7 @@
             <label for="Amount">Amount</label>
             <InputNumber id="Amount" @bind-Value="shoppingItem.Amount" class="form-control" />
         </div>
-        
+
         <div class="col-md-12 mb-3">
             <label for="Description">Description</label>
             <InputTextArea id="Description" @bind-Value="shoppingItem.Description" class="form-control" />
@@ -67,6 +75,9 @@
             <button type="submit" class="btn btn-primary">Add</button>
         </div>
     </EditForm>
+
+</ModalDialog>
+
 
 @code {
     // Style for billede der vises når data hentes. Se
@@ -92,7 +103,8 @@
 
     public async Task HandleValidSubmit()
     {
-        await AddShoppingItem();    
+        await AddShoppingItem();
+        addDialog.Close();
     }
 
     private async Task AddShoppingItem()
@@ -117,6 +129,7 @@
 
     private async Task DeleteShoppingItem(ShoppingItem item)
     {
+
         await Http.DeleteAsync($"{serverUrl}/api/shopping/delete/{item.Id}");
 
         shoppingList = await Http.GetFromJsonAsync<ShoppingItem[]>($"{serverUrl}/api/shopping/getall");
@@ -128,5 +141,20 @@
         item.Done = !item.Done;
         await Http.PutAsJsonAsync<ShoppingItem>($"{serverUrl}/api/shopping/update", item);
     }
+
+    // Beregner total pris for elementer i listen - hvis
+    // den er tom så 0
+    private decimal TotalPrice
+    {
+        get
+        {
+            if (shoppingList == null)
+                return 0;
+            return shoppingList.Select(item => item.Amount * item.Price).Sum();
+        }
+    }
+
+    //Objekt for modal dialogen hvor der oprettes data
+    private ModalDialog? addDialog { get; set; }
 }
 
