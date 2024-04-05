@@ -45,8 +45,11 @@ namespace ServerAPI.Repositories
 
         public void AddItem(ShoppingItem item)
         {
-            //db.getCollection('collection_name').find().sort({ "age" : -1}).limit(1); //max age
-            var max = collection.Find(Builders<ShoppingItem>.Filter.Empty).SortByDescending(r => r.Id).Limit(1).ToList()[0].Id;
+            var max = 0;
+            if (collection.Count(Builders<ShoppingItem>.Filter.Empty) > 0)
+            {
+                max = collection.Find(Builders<ShoppingItem>.Filter.Empty).SortByDescending(r => r.Id).Limit(1).ToList()[0].Id;
+            }
             item.Id = max + 1;
             collection.InsertOne(item);
            
