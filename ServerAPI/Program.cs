@@ -12,7 +12,7 @@ public class Program
 
         builder.Services.AddControllers();
 
-        builder.Services.AddSingleton<IShoppingRepository, ShoppingRepositoryInMemory>();
+        builder.Services.AddSingleton<IShoppingRepository, ShoppingRepositoryMongoDB>();
 
         builder.Services.AddCors(options =>
         {

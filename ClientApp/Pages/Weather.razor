@@ -1,4 +1,5 @@
-﻿@page "/weather"
+﻿@using Core.Model
+@page "/weather"
 @inject HttpClient Http
 
 <PageTitle>Weather</PageTitle>
@@ -20,6 +21,7 @@ else
                 <th>Temp. (C)</th>
                 <th>Temp. (F)</th>
                 <th>Summary</th>
+                <th>Location</th>
             </tr>
         </thead>
         <tbody>
@@ -30,38 +32,29 @@ else
                     <td>@forecast.TemperatureC</td>
                     <td>@forecast.TemperatureF</td>
                     <td>@forecast.Summary</td>
+                    <td>@forecast.Location</td>
                 </tr>
             }
         </tbody>
     </table>
-    <button class="btn btn-primary" @onclick="LoadData">Hent</button>
+    <button class="btn btn-primary" @onclick="() => LoadData(10)">Hent</button>
+    <button class="btn btn-primary" @onclick="() => ChangeAmount(-5)">5 mindre</button>
+    <button class="btn btn-primary" @onclick="() => ChangeAmount(5)">5 mere</button>
 }
 
 @code {
     private WeatherForecast[] forecasts = new WeatherForecast[0];
 
-    protected async Task LoadData()
+    protected async Task LoadData(int n)
     {
-        var data = await Http.GetFromJsonAsync<WeatherForecast[]>("https://localhost:7060/vejr/20");
-
-       
-        var d = DateOnly.FromDateTime(DateTime.Now).AddDays(1);
-        foreach (var w in data) {
-            w.Date = d;
-            d = d.AddDays(1);
-        }
-        forecasts = data;
+        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>($"https://localhost:7060/vejr/{n}");
     }
 
-    public class WeatherForecast
-    {
-        public DateOnly Date { get; set; }
-
-        public int TemperatureC { get; set; }
-
-        public string? Summary { get; set; }
-
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    async Task ChangeAmount(int delta) {
+        int count = forecasts.Length + delta;
+        await LoadData(count);
     }
+
+
 }
 
