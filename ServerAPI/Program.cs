@@ -13,6 +13,7 @@ public class Program
         builder.Services.AddControllers();
 
         builder.Services.AddSingleton<IShoppingRepository, ShoppingRepositoryMongoDB>();
+        builder.Services.AddSingleton<IBikeRepository, BikeRepositorySQLite>();
 
         builder.Services.AddCors(options =>
         {

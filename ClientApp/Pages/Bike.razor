@@ -1,0 +1,52 @@
+﻿@page "/bike"
+@inject HttpClient Http
+@inject NavigationManager navigationManager
+@using Core.Model
+<PageTitle>Bike</PageTitle>
+
+<h1>Bikes</h1>
+
+@if (bikes == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+    <table class="table">
+
+        <tbody>
+            @foreach (var bike in bikes)
+            {
+                <tr class="bikeRow">
+                    <td>
+                        <h2>@bike.Brand - @bike.Model</h2><br />
+                        Price: @bike.Price kr.
+                    </td>
+                    <td><img class="bikeImg" src="@bike.ImageUrl" width="200px" /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button class="btn btn-outline-primary" @onclick="Add">Add </button>
+}
+
+@code {
+
+    private BEBike[]? bikes;
+
+    // adresse på server
+    private string serverUrl = "https://localhost:7060";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        bikes = await Http.GetFromJsonAsync<BEBike[]>($"{serverUrl}/api/bike");
+    }
+
+    void Add() {
+        navigationManager.NavigateTo($"addbike");
+    }
+
+}
+
