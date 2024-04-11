@@ -10,6 +10,7 @@
             <th>Amount</th>
             <th>Price</th>
             <th>Done</th>
+            <th>Delete</th>
         </tr>
     </thead>
     <tbody>
@@ -21,6 +22,9 @@
                 <td>@item.Price</td>
                 <td>
                     <InputCheckbox id="Done" @bind-Value="item.Done" @onclick="() =>UpdateShoppingItem(item) " class="form-check-input" />
+                </td>
+                <td>
+                    <button @onclick="() => DeleteItem(item)" class="btn btn-primary">Slet</button>
                 </td>
                 
             </tr>
@@ -90,7 +94,7 @@
 
     public async Task HandleValidSubmit()
     {
-        await AddShoppingItem();    
+        await AddShoppingItem();
     }
 
     private async Task AddShoppingItem()
@@ -108,16 +112,22 @@
 
     protected override async Task OnInitializedAsync()
     {
+
         busyDisplayStyle = "block"; // tænd busy
         shoppingList = await Http.GetFromJsonAsync<ShoppingItem[]>($"{serverUrl}/api/shopping/getall");
         busyDisplayStyle = "none"; // sluk busy
     }
 
-    private async Task DeleteShoppingItem(ShoppingItem item)
+    private async Task DeleteItem(ShoppingItem item)
     {
-        await Http.DeleteAsync($"{serverUrl}/api/shopping/delete/{item.Id}");
+        Console.WriteLine($"vi fjerner item med id {item.Id}");
+
+        var url = serverUrl + $"/api/shopping/delete/{item.Id}";
+
+        await Http.DeleteAsync(url);
 
         shoppingList = await Http.GetFromJsonAsync<ShoppingItem[]>($"{serverUrl}/api/shopping/getall");
+
 
     }
 
