@@ -12,7 +12,7 @@ namespace ServerAPI.Repositories
 
         public ShoppingRepositoryMongoDB()
 		{
-            var password = ""; //add
+            var password = "YCx4dkQyH49XUWBg"; //add
             var mongoUri = $"mongodb+srv://olee58:{password}@cluster0.olmnqak.mongodb.net/?retryWrites=true&w=majority";
 
             
