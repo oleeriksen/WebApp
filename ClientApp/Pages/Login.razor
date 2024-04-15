@@ -25,13 +25,6 @@
 </EditForm>
 
 @code {
-
-    private User[] users = {
-                             new User { UserName = "rip", Password="1234", Role="admin"},
-                             new User { UserName = "rap", Password="4321", Role="Ordinary"},
-                             new User { UserName = "rup", Password="qwerty", Role="guest"}
-                           };
-
     private User currentUser = new();
 
     private EditContext? aEditContext;
@@ -43,7 +36,7 @@
 
     private async Task HandleSubmit()
     {
-        var validUser = ValidLogin(currentUser.UserName, currentUser.Password);
+        var validUser = await ValidLogin(currentUser.UserName, currentUser.Password);
         if (validUser != null){
             await localStore.SetItemAsync<User>("currentUser", validUser);
             var target = await localStore.GetItemAsStringAsync("target");
@@ -52,15 +45,12 @@
         }
         else
             NavManager.NavigateTo("/");
-
-
     }
 
-    private User ValidLogin(string username, string password) {
-        foreach (var aUser in users)
-            if (aUser.UserName.Equals(username) && aUser.Password.Equals(password))
-                return aUser;
-        return null;
+    private async Task<User?> ValidLogin(string username, string password) {
+        var url = $"https://localhost:7060/api/login/verify/{username}/{password}";
+        var res = await Http.GetFromJsonAsync<User>(url);
+        return res;
     }
     }
 

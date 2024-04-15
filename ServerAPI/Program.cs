@@ -14,6 +14,7 @@ public class Program
 
         builder.Services.AddSingleton<IShoppingRepository, ShoppingRepositoryMongoDB>();
         builder.Services.AddSingleton<IBikeRepository, BikeRepositorySQLite>();
+        builder.Services.AddSingleton<ILoginRepository, LoginRepositorySQLite>();
 
         builder.Services.AddCors(options =>
         {
