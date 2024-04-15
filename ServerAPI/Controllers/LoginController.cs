@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServerAPI.Repositories;
 using Core.Model;
+using Core.Crypto;
 
 
 namespace HelloBlazor.Server.Controllers
@@ -19,7 +20,9 @@ namespace HelloBlazor.Server.Controllers
         [Route("verify/{username}/{password}")]
         public User? VerifyLogin(string username, string password)
         {
-            var validUser = mRepo.Verify(username, password);
+            var crypt = new SimpleEncryption(12);
+            var clearPassword = crypt.Decrypt(password);
+            var validUser = mRepo.Verify(username, clearPassword);
             return validUser; 
         }
     }
