@@ -48,7 +48,7 @@
     }
 
     private async Task<User?> ValidLogin(string username, string password) {
-        var url = $"https://localhost:7060/api/login/verify/{username}/{password}";
+        var url = $"https://localhost:7060/api/login/verify?username={username}&&password={password}";
         var res = await Http.GetFromJsonAsync<User>(url);
         return res;
     }
