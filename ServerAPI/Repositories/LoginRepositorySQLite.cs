@@ -11,7 +11,7 @@ namespace ServerAPI.Repositories
         private Role[]? roles = null;
 
 
-        public User[] GetAll()
+        private User[] GetAll()
         {
             var result = new List<User>();
             using (var connection = new SqliteConnection(connectionString))
@@ -69,14 +69,19 @@ namespace ServerAPI.Repositories
             return res.ToArray();
         }
 
-        public User? Verify(string userName, string password)
+        public bool Verify(string userName, string password)
         {
             var theUser = GetAll().Where( u => u.UserName.Equals(userName,StringComparison.OrdinalIgnoreCase) &&
                                                u.Password.Equals(password));
 
-            if (theUser != null && theUser.Count() == 1)
-                return theUser.First();
-            return null;
+            return (theUser != null && theUser.Count() == 1);
+        }
+
+        public User GetUserByUserName(string username)
+        {
+            var theUser = GetAll().Where(u => u.UserName.Equals(username, StringComparison.OrdinalIgnoreCase));
+
+            return theUser.Single<User>();
         }
     }
 }

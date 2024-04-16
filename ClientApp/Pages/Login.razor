@@ -37,8 +37,14 @@
     private async Task HandleSubmit()
     {
         var validUser = await ValidLogin(currentUser.UserName, currentUser.Password);
-        if (!validUser.UserName.Equals("NO-NAME")){
-            await localStore.SetItemAsync<User>("currentUser", validUser);
+        if (validUser){
+            //get the user
+            var theUser = await GetUserByUsername(currentUser.UserName);
+
+            // save it in local storage
+            await localStore.SetItemAsync<User>("currentUser", theUser);
+
+            // get where to navigate to 
             var target = await localStore.GetItemAsStringAsync("target");
 
             NavManager.NavigateTo(target, true);
@@ -47,10 +53,18 @@
             NavManager.NavigateTo("/");
     }
 
-    private async Task<User?> ValidLogin(string username, string password) {
+    private async Task<bool> ValidLogin(string username, string password) {
         var url = $"https://localhost:7060/api/login/verify?username={username}&&password={password}";
+        var res = await Http.GetFromJsonAsync<bool>(url);
+
+        return res;
+    }
+
+    private async Task<User> GetUserByUsername(string username)
+    {
+        var url = $"https://localhost:7060/api/login/getuser?username={username}";
         var res = await Http.GetFromJsonAsync<User>(url);
-      
+
         return res;
     }
     }
