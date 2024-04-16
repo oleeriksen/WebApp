@@ -6,9 +6,9 @@ namespace ServerAPI.Repositories
     public interface ILoginRepository
     {
 
-        User? Verify(string userName, string password);
+        bool Verify(string userName, string password);
 
-        User[] GetAll();
+        User GetUserByUserName(string username);
     }
 }
 
