@@ -23,10 +23,28 @@ namespace Core.Crypto
 
         private char Next(char ch, int key)
         {
-            var x = ch + key;
-
-            return (char)x;
-
+            if ('0' <= ch && ch <= '9')
+            {
+                key = key % 10;
+                var y = ((ch - '0') + key);
+                if (y < '0') y += 10;
+                return (char)(y % 10 + (int)'0');
+            }
+            if ('a' <= ch && ch <= 'z')
+            {
+                key = key % 26;
+                var y = ((ch - 'a') + key);
+                if (y < 'a') y += 26;
+                return (char)(y % 26 + (int)'a');
+            }
+            if ('A' <= ch && ch <= 'Z')
+            {
+                key = key % 26;
+                var y = ((ch - 'A') + key);
+                if (y < 'A') y += 26;
+                return (char)(y % 26 + (int)'A');
+            }
+            return ch;
         }
 
         public string Decrypt(string chiperText)
