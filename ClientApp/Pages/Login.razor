@@ -51,7 +51,8 @@
     private async Task<User?> ValidLogin(string username, string password) {
         var crypt = new SimpleEncryption(12);
         var encryptedPassword = crypt.Encrypt(password);
-        var url = $"https://localhost:7060/api/login/verify/{username}/{encryptedPassword}";
+
+        var url = $"https://localhost:7060/api/login/verify?username={username}&password={encryptedPassword}";
 
         Console.WriteLine($"Requesting login from {url}");
         var res = await Http.GetFromJsonAsync<User>(url);

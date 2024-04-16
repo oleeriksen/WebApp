@@ -17,8 +17,8 @@ namespace HelloBlazor.Server.Controllers
         }
 
         [HttpGet]
-        [Route("verify/{username}/{password}")]
-        public User? VerifyLogin(string username, string password)
+        [Route("verify")]
+        public User? VerifyLogin([FromQuery] string username, [FromQuery] string password)
         {
             var crypt = new SimpleEncryption(12);
             var clearPassword = crypt.Decrypt(password);
