@@ -24,7 +24,7 @@ namespace HelloBlazor.Server.Controllers
 
         [HttpGet]
         [Route("getuser")]
-        public User VerifyLogin([FromQuery] string username)
+        public User GetUserByUserName([FromQuery] string username)
         {
             return mRepo.GetUserByUserName(username);
         }
