@@ -37,7 +37,7 @@
     private async Task HandleSubmit()
     {
         var validUser = await ValidLogin(currentUser.UserName, currentUser.Password);
-        if (validUser != null){
+        if (!validUser.UserName.Equals("NO-NAME")){
             await localStore.SetItemAsync<User>("currentUser", validUser);
             var target = await localStore.GetItemAsStringAsync("target");
 
@@ -50,6 +50,7 @@
     private async Task<User?> ValidLogin(string username, string password) {
         var url = $"https://localhost:7060/api/login/verify?username={username}&&password={password}";
         var res = await Http.GetFromJsonAsync<User>(url);
+      
         return res;
     }
     }

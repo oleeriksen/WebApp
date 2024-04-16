@@ -17,10 +17,11 @@ namespace HelloBlazor.Server.Controllers
 
         [HttpGet]
         [Route("verify")]
-        public User? VerifyLogin([FromQuery] string username, [FromQuery] string password)
+        public User VerifyLogin([FromQuery] string username, [FromQuery] string password)
         {
             var validUser = mRepo.Verify(username, password);
-            return validUser; 
+            
+            return validUser?? new User { UserName = "NO-NAME"}; 
         }
     }
 }
