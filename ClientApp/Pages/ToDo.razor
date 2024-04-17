@@ -15,6 +15,7 @@
             <th scope="col">What to do</th>
             <th scope="col">Priority</th>
             <th scope="col">Delete</th>
+            <th scope="col">Update</th>
         </tr>
     </thead>
     <tbody>
@@ -35,13 +36,14 @@
                 <td>
                     <scan class="bi bi-x-circle-fill" style="color:red;" @onclick="() => DeleteToDo(todo)"></scan>
                 </td>
+                <td>
+                    <scan class="bi bi-check-circle" style="color:blue;" @onclick="() => UpdateToDo(todo)"></scan>
+                </td>
             </tr>
         }
     </tbody>
 </table>
 <div class="btn-group" role="group" style="margin:2px 0 10px 0;">
-    <button class="btn btn-outline-primary" @onclick="UpdateLocalStorage">Save</button>
-    <button class="btn btn-outline-primary" @onclick="ClearLocalStorage">Clear</button>
     <button class="btn btn-outline-primary" @onclick="SorterToDos">Sorter</button>
 </div>
 <br />
@@ -70,26 +72,24 @@
             var newItem = new ToDoItem { Title = newTodoTitle };
             await Http.PostAsJsonAsync<ToDoItem>("https://localhost:7060/api/todo/add", newItem);
 
-            UpdateList();
+            await UpdateList();
             newTodoTitle = string.Empty;
         }
     }
 
-    public void UpdateLocalStorage()
-    {
-        //await localStore.SetItemAsync(todoKey, todos);
-    }
 
-    public void ClearLocalStorage()
-    {
-    }
 
     private async Task DeleteToDo(ToDoItem todo)
     {
         await Http.DeleteAsync($"https://localhost:7060/api/todo/delete/{todo.Id}");
-        UpdateList();
+        await UpdateList();
+    }
 
+    private async Task UpdateToDo(ToDoItem todo)
+    {
+        await Http.PostAsJsonAsync<ToDoItem>("https://localhost:7060/api/todo/update", todo);
 
+        await UpdateList();
     }
 
     private async Task UpdateList() {

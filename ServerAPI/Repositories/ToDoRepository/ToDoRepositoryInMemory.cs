@@ -16,7 +16,8 @@ namespace ServerAPI.Repositories.ToDoRepository
 
         public void Add(ToDoItem item)
         {
-            var newId = items.Count + 1; //FIX-ME
+            ;
+            var newId = items.Max<ToDoItem>(a => a.Id) + 1; //FIXed
             item.Id = newId;
             items.Add(item);
         }
