@@ -1,0 +1,71 @@
+﻿@page "/login"
+@using Core.Model;
+@inject Blazored.LocalStorage.ILocalStorageService localStore
+@inject NavigationManager NavManager
+@inject HttpClient Http;
+
+<h1>Login</h1>
+
+<EditForm EditContext="@aEditContext" OnSubmit="@HandleSubmit" class="row p-3">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="col-md-6 mb-3">
+        <label for="Name">Brugernavn</label>
+        <InputText id="Name" @bind-Value="currentUser.UserName" placeHolder="Indtast brugernavn..." class="form-control" />
+    </div>
+    <div class="col-md-6 mb-3">
+        <label for="password">Password</label>
+        <InputText type="password" placeholder="Indtast password..." id="password" @bind-Value="currentUser.Password" class="form-control" />
+    </div>
+
+    <div class="col-12 mb-3">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+
+</EditForm>
+
+@code {
+    private User currentUser = new();
+
+    private EditContext? aEditContext;
+
+    protected override void OnInitialized()
+    {
+        aEditContext = new EditContext(currentUser);
+    }
+
+    private async Task HandleSubmit()
+    {
+        var validUser = await ValidLogin(currentUser.UserName, currentUser.Password);
+        if (validUser){
+            //get the user
+            var theUser = await GetUserByUsername(currentUser.UserName);
+
+            // save it in local storage
+            await localStore.SetItemAsync<User>("currentUser", theUser);
+
+            // get where to navigate to 
+            var target = await localStore.GetItemAsStringAsync("target");
+
+            NavManager.NavigateTo(target, true);
+        }
+        else
+            NavManager.NavigateTo("/");
+    }
+
+    private async Task<bool> ValidLogin(string username, string password) {
+        var url = $"https://localhost:7060/api/login/verify?username={username}&&password={password}";
+        var res = await Http.GetFromJsonAsync<bool>(url);
+
+        return res;
+    }
+
+    private async Task<User> GetUserByUsername(string username)
+    {
+        var url = $"https://localhost:7060/api/login/getuser?username={username}";
+        var res = await Http.GetFromJsonAsync<User>(url);
+
+        return res;
+    }
+    }
+

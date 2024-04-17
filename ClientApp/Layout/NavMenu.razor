@@ -1,4 +1,8 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿
+@using Core.Model;
+@inject Blazored.LocalStorage.ILocalStorageService localStore
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">ClientApp</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -7,11 +11,11 @@
     </div>
 </div>
 
-<div style=""class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+<div style="" class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home @LoggedInUserName
             </NavLink>
         </div>
         <div class="nav-item px-3">
@@ -58,11 +62,24 @@
 @code {
     private bool collapseNavMenu = true;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+        private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
+        private void ToggleNavMenu()
+        {
+            collapseNavMenu = !collapseNavMenu;
+        }
+
+        private User? LoggedIn { get; set; }
+
+        protected override async Task OnInitializedAsync()
+        {
+            LoggedIn = await localStore.GetItemAsync<User>("currentUser");
+        }
+
+        private string LoggedInUserName { get {
+            if (LoggedIn == null)
+                return "";
+            return "(" + LoggedIn.UserName + ")";
+        } }
     }
-}
 
