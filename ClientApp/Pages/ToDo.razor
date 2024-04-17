@@ -1,6 +1,8 @@
 ﻿@page "/todo"
 @inject Blazored.LocalStorage.ILocalStorageService localStore
 @using ClientApp.Util
+@inject HttpClient Http;
+@using Core.Model;
 
 <PageTitle>Todo</PageTitle>
 
@@ -21,13 +23,15 @@
             <tr>
                 <td><InputCheckbox @bind-Value="todo.IsDone" /></td>
                 <td><InputText @bind-Value="todo.Title" /></td>
-                <td><InputSelect @bind-Value="todo.Priority" class="form-control">
+                <td>
+                    <InputSelect @bind-Value="todo.Priority" class="form-control">
 
-                    @for (int i=0; i < priorities.Length;i++) 
+                        @for (int i = 0; i < priorities.Length; i++)
                         {
-                           <option value="@(i+1)">@priorities[i]</option>
-    }
-</InputSelect></td>
+                            <option value="@(i+1)">@priorities[i]</option>
+                        }
+                    </InputSelect>
+                </td>
                 <td>
                     <scan class="bi bi-x-circle-fill" style="color:red;" @onclick="() => DeleteToDo(todo)"></scan>
                 </td>
@@ -40,57 +44,62 @@
     <button class="btn btn-outline-primary" @onclick="ClearLocalStorage">Clear</button>
     <button class="btn btn-outline-primary" @onclick="SorterToDos">Sorter</button>
 </div>
-<br/>
+<br />
 <div>
     <InputText placeholder="Something todo" @bind-Value="newTodoTitle" />
     <button class="btn btn-outline-primary" @onclick="AddTodo">Add todo</button>
 </div>
 
 
-    @code {
+@code {
 
-        private string[] priorities = { "Lav", "Middel", "Høj" };
-        private string? newTodoTitle;
+    private string[] priorities = { "Lav", "Middel", "Høj" };
+    private string? newTodoTitle;
 
-        private List<ToDoItem> todos = new();
+    private ToDoItem[] todos = new ToDoItem[0];
 
-        private const string todoKey = "todo";
+    protected override async Task OnInitializedAsync()
+    {
+        await UpdateList();
+    }
 
-        protected override async Task OnInitializedAsync()
+    private async Task AddTodo()
+    {
+        if (!string.IsNullOrWhiteSpace(newTodoTitle))
         {
-            var data = await localStore.GetItemAsync<List<ToDoItem>>(todoKey);
-            if (data != null)
-                todos = data;
-        }
+            var newItem = new ToDoItem { Title = newTodoTitle };
+            await Http.PostAsJsonAsync<ToDoItem>("https://localhost:7060/api/todo/add", newItem);
 
-        private void AddTodo()
-        {
-            if (!string.IsNullOrWhiteSpace(newTodoTitle))
-            {
-                todos.Add(new ToDoItem { Title = newTodoTitle });
-                newTodoTitle = string.Empty;
-            }
+            UpdateList();
+            newTodoTitle = string.Empty;
         }
+    }
 
-        public async void UpdateLocalStorage()
-        {
-            await localStore.SetItemAsync(todoKey, todos);
-        }
+    public void UpdateLocalStorage()
+    {
+        //await localStore.SetItemAsync(todoKey, todos);
+    }
 
-        public async void ClearLocalStorage()
-        {
-            todos.Clear();
-            await localStore.RemoveItemAsync(todoKey);
-        }
+    public void ClearLocalStorage()
+    {
+    }
 
-        private void DeleteToDo(ToDoItem todo)
-        {
-            todos.Remove(todo);
-        }
+    private async Task DeleteToDo(ToDoItem todo)
+    {
+        await Http.DeleteAsync($"https://localhost:7060/api/todo/delete/{todo.Id}");
+        UpdateList();
 
-        private void SorterToDos()
-        {
-            todos.Sort((a, b) => -a.Priority.CompareTo(b.Priority));
-        }
+
+    }
+
+    private async Task UpdateList() {
+        todos = await Http.GetFromJsonAsync<ToDoItem[]>("https://localhost:7060/api/todo/getall");
+
+        StateHasChanged();
+    }
+
+    private void SorterToDos()
+    {
+    }
     }
 
