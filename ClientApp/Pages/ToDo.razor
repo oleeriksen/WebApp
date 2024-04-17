@@ -34,10 +34,10 @@
                     </InputSelect>
                 </td>
                 <td>
-                    <scan class="bi bi-x-circle-fill" style="color:red;" @onclick="() => DeleteToDo(todo)"></scan>
+                    <scan class="bi bi-x-circle-fill" style="color:red; cursor:grab;" @onclick="() => DeleteToDo(todo)"></scan>
                 </td>
                 <td>
-                    <scan class="bi bi-check-circle" style="color:blue;" @onclick="() => UpdateToDo(todo)"></scan>
+                    <scan class="bi bi-check-circle" style="color: blue; cursor: grab;" @onclick="() => UpdateToDo(todo)"></scan>
                 </td>
             </tr>
         }
