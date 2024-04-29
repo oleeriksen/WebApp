@@ -1,7 +1,7 @@
 ﻿@page "/bike"
-@inject HttpClient Http
 @inject NavigationManager navigationManager
 @using Core.Model
+@using ClientApp.Services
 <PageTitle>Bike</PageTitle>
 
 <h1>Bikes</h1>
@@ -35,13 +35,12 @@ else
 
     private BEBike[]? bikes;
 
-    // adresse på server
-    private string serverUrl = "https://localhost:7060";
-
+    [Inject]
+    private IBikeService mService { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        bikes = await Http.GetFromJsonAsync<BEBike[]>($"{serverUrl}/api/bike");
+        bikes = await mService.GetAll();
     }
 
     void Add() {
