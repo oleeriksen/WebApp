@@ -1,0 +1,16 @@
+﻿@using Core.Model
+<li class="draggable" draggable="true" title="@clubRequest.Name" @ondragstart="@(() => HandleDragStart(clubRequest))">
+    <p class="description">@clubRequest.Name (@clubRequest.NumberOfChildren)</p>
+    <p class="last-updated"><small>Name</small> @clubRequest.Name</p>
+</li>
+
+@code {
+    [CascadingParameter] RequestContainer Container { get; set; }
+
+    [Parameter] public ClubRequest clubRequest { get; set; }
+
+    private void HandleDragStart(ClubRequest selectedRequest)
+    {
+        Container.CurrentRequest = selectedRequest;
+    }
+}

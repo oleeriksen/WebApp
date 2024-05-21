@@ -1,0 +1,23 @@
+﻿@using Core.Model
+<div class="jobs-container">
+<CascadingValue Value="this">
+    @ChildContent
+</CascadingValue>
+</div>
+
+@code {
+    [Parameter] public List<ClubRequest> Requests { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public EventCallback<ClubRequest> OnUpdated { get; set; }
+
+    public ClubRequest CurrentRequest { get; set; }
+
+    public async Task UpdateJobAsync(int newWeek, int newPeriod)
+    {
+        CurrentRequest.Week = newWeek;
+        CurrentRequest.Period = newPeriod;
+        await OnUpdated.InvokeAsync(CurrentRequest);
+    }
+}
+}
+

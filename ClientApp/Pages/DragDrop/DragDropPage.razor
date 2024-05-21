@@ -1,0 +1,51 @@
+﻿@using Core.Model
+@page "/dd"
+
+<RequestContainer Requests="requests" OnUpdated="HandleUpdated">
+    <RequestList ListWeek="27" ListPeriod="1" />
+    <RequestList ListWeek="27" ListPeriod="2" />
+    <RequestList ListWeek="27" ListPeriod="3" />
+   
+    <RequestList ListWeek="28" ListPeriod="1" />
+    <RequestList ListWeek="28" ListPeriod="2" />
+    <RequestList ListWeek="28" ListPeriod="3" />
+    
+    <RequestList ListWeek="29" ListPeriod="1" />
+    <RequestList ListWeek="29" ListPeriod="2" />
+    <RequestList ListWeek="29" ListPeriod="3" />
+
+</RequestContainer>
+
+<hr />
+<p>Last updated request name: <strong>@lastUpdatedRequest</strong></p>
+<hr />
+
+@foreach (var request in requests)
+{
+    <p>@request.Name - @request.Week , @request.Period</p>
+}
+
+@code {
+    List<ClubRequest> requests = new();
+    string lastUpdatedRequest = "";
+
+    protected override void OnInitialized()
+    {
+        requests.Add(new ClubRequest { Name = "Peter", NumberOfChildren = 1, Week = 27, Period = 1 });
+        requests.Add(new ClubRequest { Name = "Else", NumberOfChildren = 1, Week = 27, Period = 1 });
+        requests.Add(new ClubRequest { Name = "Lise", NumberOfChildren = 2, Week = 27, Period = 2 });
+        requests.Add(new ClubRequest { Name = "Mette", NumberOfChildren = 1, Week = 27, Period = 3 });
+        requests.Add(new ClubRequest { Name = "Amalie", NumberOfChildren = 2, Week = 27, Period = 1 });
+        requests.Add(new ClubRequest { Name = "Sofie", NumberOfChildren = 1, Week = 27, Period = 2 });
+        requests.Add(new ClubRequest { Name = "Lotte", NumberOfChildren = 2, Week = 27, Period = 2 });
+        requests.Add(new ClubRequest { Name = "Sigurd", NumberOfChildren = 1, Week = 28, Period = 3 });
+
+    }
+
+    void HandleUpdated(ClubRequest request)
+    {
+        lastUpdatedRequest = request.Name;
+    }
+}
+
+

@@ -3,7 +3,7 @@ using ServerAPI.Repositories;
 using Core.Model;
 
 
-namespace HelloBlazor.Server.Controllers
+namespace ServerAPI.Controllers
 {
     [ApiController]
     [Route("api/login")]

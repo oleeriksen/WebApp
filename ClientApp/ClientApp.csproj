@@ -23,11 +23,13 @@
     <None Remove="Util\" />
     <None Remove="Pages\InputControls\" />
     <None Remove="Services\" />
+    <None Remove="Pages\DragDrop\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Util\" />
     <Folder Include="Pages\InputControls\" />
     <Folder Include="Services\" />
+    <Folder Include="Pages\DragDrop\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

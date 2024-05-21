@@ -1,0 +1,60 @@
+﻿@using Core.Model
+<div class="job-status">
+<h3>Uge @ListWeek, period @ListPeriod (@mRequests.Count())</h3>
+
+<ul class="dropzone @dropClass"
+    ondragover="event.preventDefault();"
+    ondragstart="event.dataTransfer.setData('', event.target.id);"
+    @ondrop="HandleDrop"
+    @ondragenter="HandleDragEnter"
+    @ondragleave="HandleDragLeave">
+
+    @foreach (var request in mRequests)
+    {
+        <ChildRequestComponent clubRequest="request" />
+    }
+
+</ul>
+</div>
+
+@code {
+
+    [CascadingParameter] RequestContainer Container { get; set; }
+
+    [Parameter] public int ListWeek { get; set; }
+    [Parameter] public int ListPeriod { get; set; }
+
+
+    List<ClubRequest> mRequests = new();
+    string dropClass = "";
+
+    protected override void OnParametersSet()
+    {
+        mRequests.Clear();
+        mRequests.AddRange(Container.Requests.Where((r) => r.Week == ListWeek && r.Period == ListPeriod));
+    }
+
+    private void HandleDragEnter()
+    {
+        if (Container.CurrentRequest.Week == ListWeek &&
+            Container.CurrentRequest.Period == ListPeriod) return;
+
+        
+            dropClass = "no-drop";//"can-drop"
+        
+    }
+
+    private void HandleDragLeave()
+    {
+        dropClass = "";
+    }
+
+    private async Task HandleDrop()
+    {
+        dropClass = "";
+
+        
+        await Container.UpdateJobAsync(ListWeek, ListPeriod);
+    }
+}
+
